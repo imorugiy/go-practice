@@ -41,3 +41,9 @@ compile:
   artifacts:
     paths:
       - mybinary
+
+run:
+  stage: deploy
+  script:
+    - ./mybinary
+

@@ -1,19 +1,3 @@
-// Package classification Products API
-//
-// Documentation for Products API
-//
-// Schemes: http
-// BasePath: /
-// Version: 0.0.1
-//
-// Consumes:
-// - application/json
-//
-// Produces:
-// - application/json
-//
-// swagger:meta
-
 package data
 
 import (
@@ -26,7 +10,32 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+// A list of products returns in the response
+// swagger:response productsResponse
+type productsResponseWrapper struct {
+	// All products in the system
+	// in: body
+	Body []Product
+}
+
+// swagger:response noContent
+type productsNoContent struct {
+}
+
+// swagger:parameters deleteProduct
+type productIDParameterWrapper struct {
+	// The id of the product to delete
+	// in: path
+	// required: true
+	ID int `json:"id"`
+}
+
+// swagger:model
 type Product struct {
+	// the id of the product
+	//
+	// required: true
+	// min: 1
 	ID          int     `json:"id"`
 	Name        string  `json:"name" validate:"required"`
 	Description string  `json:"description"`
@@ -79,6 +88,16 @@ func UpdateProduct(id int, p *Product) error {
 
 	p.ID = id
 	productList[pos] = p
+	return nil
+}
+
+func DeleteProduct(id int) error {
+	_, pos, err := findProduct(id)
+	if err != nil {
+		return err
+	}
+
+	productList = append(productList[:pos], productList[pos+1:]...)
 	return nil
 }
 

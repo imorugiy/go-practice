@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"go-practice/data"
 	"log"
 	"net/http"
@@ -67,6 +68,13 @@ func (p *Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 		err := product.FromJSON(r.Body)
 		if err != nil {
 			http.Error(w, "Unable to unmarshal json", http.StatusBadRequest)
+			return
+		}
+
+		// validate the product
+		err = product.Validate()
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error validating product: %s", err), http.StatusBadRequest)
 			return
 		}
 

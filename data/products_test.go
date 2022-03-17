@@ -1,13 +1,15 @@
 package data
 
-import "testing"
+import (
+	"testing"
 
-func TestCheckValidation(t *testing.T) {
-	p := &Product{Name: "Tea", Price: 1.00, SKU: "abc-abd-ddd"}
+	"github.com/stretchr/testify/assert"
+)
 
-	err := p.Validate()
+func TestProductMissingNameReturnsErr(t *testing.T) {
+	p := &Product{Price: 1.22, SKU: "abc-bcd-cde"}
 
-	if err != nil {
-		t.Fatal(err)
-	}
+	v := NewValidation()
+	errs := v.Validate(p)
+	assert.Len(t, errs, 1)
 }
